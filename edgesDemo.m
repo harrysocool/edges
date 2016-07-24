@@ -23,4 +23,5 @@ if(0), edgesEval( model, 'show',1, 'name','' ); end
 %% detect edge and visualize results
 I = imread('peppers.png');
 tic, E=edgesDetect(I,model); toc
-figure(1); im(I); figure(2); im(1-E);
+figure(1); im(I); 
+figure(2); im(1-E);
