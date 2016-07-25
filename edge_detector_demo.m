@@ -1,6 +1,6 @@
-function boxes = edge_detector_demo(image_index, demo_index)
+function boxes = edge_detector_demo(image_filepath)
     addpath('private');
-    addpath('models')
+    addpath('models');
     addpath('toolbox');
 
     if(~exist('edgesDetectMex'))
@@ -31,34 +31,7 @@ function boxes = edge_detector_demo(image_index, demo_index)
     opts.maxBoxes = 1e4;  % max number of boxes to detect
 
     %% detect Edge Box bounding box proposals (see edgeBoxes.m)
-    % demo_index == 0, for iamge demo
-    if demo_index == 0
-        path = '/harrysocool/Github/fast-rcnn/ear_recognition/data_file/image_index_list.csv';
-        if ismac
-            path1 = ['/Users' path];
-            fid = fopen(path1);
-            p = textscan(fid, '%q', 'Delimiter', '\n');
-            image_filenames = p{1}{image_index};
-        elseif isunix
-            path1 = ['/home' path];
-            fid = fopen(path1);
-            p = textscan(fid, '%q', 'Delimiter', '\n');
-            image_filenames = p{1}{image_index};
-        end
-        im = imread(image_filenames);
-        bbs=edgeBoxes(im,model,opts);
-        boxes = double(bbs(:, 1:4));
-        boxes = 1;
-    % demo_index == 1, for vedio demo
-    elseif demo_index == 1
-                path = '/harrysocool/Github/fast-rcnn/ear_recognition/data_file/video_frame.jpg';
-        if ismac
-            image_filenames = ['/Users' path];
-        elseif isunix
-            image_filenames = ['/home' path];
-        end
-        im = imread(image_filenames);
-        bbs=edgeBoxes(im,model,opts);
-        boxes = double(bbs(:, 1:4));
-    end
+    im = imread(image_filepath);
+    bbs=edgeBoxes(im,model,opts);
+    boxes = double(bbs(:, 1:4));
     
