@@ -1,6 +1,9 @@
 /BSR/
-/models/
 /sweeps*
 /boxes/
 /toolbox
 *.m~
+/DatabaseEars
+/private
+/EAR
+/models/tree
