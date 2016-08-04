@@ -33,5 +33,8 @@ function boxes = edge_detector_demo(image_filepath, model_name, alpha, beta)
     %% detect Edge Box bounding box proposals (see edgeBoxes.m)
     im = imread(image_filepath);
     bbs=edgeBoxes(im,model,opts);
-    boxes = double(bbs(:, 1:4));
+    %% change it to the right format of the bbs
+    bbs = double(bbs);
+    bbs(:, 3:4) = bbs(:, 1:2) + bbs(:, 3:4);
+    boxes = bbs(:, 1:4) - 1;
     

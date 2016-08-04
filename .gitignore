@@ -4,7 +4,7 @@
 /toolbox
 *.m~
 /DatabaseEars
-/private
+/private/
 /EAR
 /models/tree
 *.asv
