@@ -3,7 +3,7 @@
 %% load pre-trained edge detection model and set opts (see edgesDemo.m)
 model=load('models/forest/modelEAR0.4_2.mat'); 
 model=model.model;
-model.opts.multiscale=1; 
+model.opts.multiscale=0; 
 model.opts.sharpen=2; 
 model.opts.nThreads=4;
 model.opts.nms=0;
@@ -16,14 +16,14 @@ opts.minScore = .01;  % min score of boxes to detect
 opts.maxBoxes = 1e4;  % max number of boxes to detect
 
 %% detect Edge Box bounding box proposals (see edgeBoxes.m)
-im_path= 'DatabaseEars/';
+im_path= '/home/harrysocool/Github/fast-rcnn/DatabaseEars/DatabaseEars/';
 gt_path= 'boundaries.csv';
 im_path_list = dir(im_path);
 gt_list = csvread(gt_path, 1, 0);
-for index = 3:length(im_path_list)
+for index = 4 :length(im_path_list)
     I = imread([im_path im_path_list(index).name]);
     tic, bbs=edgeBoxes(I,model,opts); toc
-    gt = gt_list(index-2, :);
+    gt = gt_list(index-3, :);
     % gt format of the southampton database is [Y1 Y2 X1 X2] start from 1
     X1 = gt(3);
     X2 = gt(4);
@@ -36,9 +36,9 @@ for index = 3:length(im_path_list)
         Y2 = 795;
         disp('error')
     end
-    [gtRes,dtRes]=bbGt('evalRes',[X1, Y1, W, H, 0],double(bbs),.8);
+    [gtRes,dtRes]=bbGt('evalRes',[X1, Y1, W, H, 0],double(bbs),.7);
     figure(1); 
-    bbGt('showRes',I,gtRes,dtRes(dtRes(:,5)>0.09,:));
+    bbGt('showRes',I,gtRes,dtRes(dtRes(:,5)>0.7,:));
     title('green=matched gt  red=missed gt  dashed-green=matched detect');
     pause
     close

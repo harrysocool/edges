@@ -4,9 +4,10 @@
 /toolbox
 *.m~
 /DatabaseEars
-/private
+/private*
 /EAR
 /models/tree
 *.asv
 ._*
 .DS_Store
+/models/models-backup
