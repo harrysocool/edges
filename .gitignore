@@ -4,6 +4,7 @@
 /toolbox
 *.m~
 /DatabaseEars
+<<<<<<< HEAD
 /private*
 /EAR
 /models/tree
