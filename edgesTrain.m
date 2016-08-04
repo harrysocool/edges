@@ -106,8 +106,14 @@ opts.nTotFtrs = opts.nChnFtrs + opts.nSimFtrs; disp(opts);
 stream=RandStream('mrg32k3a','Seed',opts.seed);
 
 % train nTrees random trees (can be trained with parfor if enough memory)
-if(opts.useParfor), parfor i=1:nTrees, trainTree(opts,stream,i); end
-else for i=1:nTrees, trainTree(opts,stream,i); end; end
+if(opts.useParfor)
+    for index = 1:2:nTrees
+       parfor i=index:index+1 
+           trainTree(opts,stream,i); 
+       end
+    end
+else for i=1:nTrees, trainTree(opts,stream,i); end; 
+end
 
 % merge trees and save model
 model = mergeTrees( opts );
@@ -168,7 +174,7 @@ function trainTree( opts, stream, treeInd )
 trnImgDir = [opts.bsdsDir '/images/train/'];
 trnDepDir = [opts.bsdsDir '/depth/train/'];
 trnGtDir = [opts.bsdsDir '/groundTruth/train/'];
-imgIds=dir(trnImgDir); imgIds=imgIds([imgIds.bytes]>0);
+imgIds=dir(trnImgDir); imgIds=imgIds([imgIds.bytes]>4096);
 imgIds={imgIds.name}; ext=imgIds{1}(end-2:end);
 nImgs=length(imgIds); for i=1:nImgs, imgIds{i}=imgIds{i}(1:end-4); end
 
@@ -213,7 +219,9 @@ for i = 1:nImgs
   B(:,[1:imRadius end-imRadius:end])=0;
   for j=1:nGt
     M=gt{j}.Boundaries; M(bwdist(M)<gtRadius)=1;
-    [y,x]=find(M.*B); k2=min(length(y),ceil(nPos/nImgs/nGt));
+    % disp(i);
+    [y,x]=find(M.*B); 
+    k2=min(length(y),ceil(nPos/nImgs/nGt));
     rp=randperm(length(y),k2); y=y(rp); x=x(rp);
     xy=[xy; x y ones(k2,1)*j]; k1=k1+k2; %#ok<AGROW>
     [y,x]=find(~M.*B); k2=min(length(y),ceil(nNeg/nImgs/nGt));
