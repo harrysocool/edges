@@ -21,11 +21,11 @@ function all_boxes = edge_detector(image_filenames, output_filename)
 
     %% load pre-trained edge detection model and set opts (see edgesDemo.m)
     model=load('models/forest/modelEAR0.4_2.mat'); model=model.model;
-    model.opts.multiscale=1; model.opts.sharpen=2; model.opts.nThreads=4;
+    model.opts.multiscale=0; model.opts.sharpen=2; model.opts.nThreads=4;
 
     %% set up opts for edgeBoxes (see edgeBoxes.m)
     opts = edgeBoxes;
-    opts.alpha = .55;     % step size of sliding window search
+    opts.alpha = .60;     % step size of sliding window search
     opts.beta  = .75;     % nms threshold for object proposals
     opts.minScore = .01;  % min score of boxes to detect
     opts.maxBoxes = 1e4;  % max number of boxes to detect
@@ -33,6 +33,7 @@ function all_boxes = edge_detector(image_filenames, output_filename)
     %% detect Edge Box bounding box proposals (see edgeBoxes.m)
     % Process all images.
     all_boxes = {};
+    count = 0;
     for i=1:length(image_filenames)
         im = imread(image_filenames{i});
         bbs=edgeBoxes(im,model,opts);
@@ -41,6 +42,8 @@ function all_boxes = edge_detector(image_filenames, output_filename)
         bbs(:, 3:4) = bbs(:, 1:2) + bbs(:, 3:4);
         correct_bbs = bbs(:, 1:4) - 1;
         all_boxes{i} = correct_bbs;
+        count = count + 1;
+        display(['No.',int2str(count),' pictures processed, ', int2str(size(correct_bbs,1)), ' boxes']);
     end
 
     if nargin > 1
