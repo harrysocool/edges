@@ -21,7 +21,7 @@ function boxes = edge_detector_demo(image_filepath, model_name, alpha, beta)
 
     %% load pre-trained edge detection model and set opts (see edgesDemo.m)
     model=load(['models/forest/model' model_name '.mat']); model=model.model;
-    model.opts.multiscale=1; model.opts.sharpen=2; model.opts.nThreads=4;
+    model.opts.multiscale=0; model.opts.sharpen=2; model.opts.nThreads=4;
 
     %% set up opts for edgeBoxes (see edgeBoxes.m)
     opts = edgeBoxes;
